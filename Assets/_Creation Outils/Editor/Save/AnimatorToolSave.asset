@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: AnimatorToolSave
   m_EditorClassIdentifier: 
   toolData:
-    speed: 5
+    speed: 1
     looping: 1
+    delay: 0
   settings:
     timelineBackgroundColor: {r: 0.65, g: 0.65, b: 0.65, a: 1}
     hierarchySelectedColorPause: {r: 0, g: 0.4811321, b: 0.09050994, a: 1}

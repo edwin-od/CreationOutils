@@ -29,6 +29,8 @@ public class AnimatorManipulationWindow : EditorWindow
 
     static float speed = 1;
 
+    static float delay = 0;
+
     double t0;
     static float elapsedTime = 0;
 
@@ -38,7 +40,7 @@ public class AnimatorManipulationWindow : EditorWindow
     static string[] tabs = new string[] { "Animators", "Settings" };
     static Vector2 scrollPos = Vector2.zero;
 
-    static (float, bool) lastSave = (1, true);
+    static (float, bool, float) lastSave = (1, true, 0);
 
     [MenuItem("Window/Animator Tool")]
     public static void Open()
@@ -121,20 +123,21 @@ public class AnimatorManipulationWindow : EditorWindow
                 {
                     speed = data.speed;
                     looping = data.looping;
-                    lastSave = (speed, looping);
+                    lastSave = (speed, looping, delay);
                 }
                 else
                 {
                     speed = 1;
                     looping = true;
+                    delay = 0;
                     SetAnimationTime(0);
-                    lastSave = (speed, looping);
+                    lastSave = (speed, looping, delay);
                 }
             }
             else
             {
-                save.SaveToolData(speed, looping);
-                lastSave = (speed, looping);
+                save.SaveToolData(speed, looping, delay);
+                lastSave = (speed, looping, delay);
                 Save();
             }
         } 
@@ -203,7 +206,7 @@ public class AnimatorManipulationWindow : EditorWindow
                             GUILayout.BeginHorizontal();
                             GUILayout.Space(20);
                             // save
-                            bool canSave = speed != lastSave.Item1 || looping != lastSave.Item2;
+                            bool canSave = speed != lastSave.Item1 || looping != lastSave.Item2 || delay != lastSave.Item3;
                             EditorGUI.BeginDisabledGroup(!canSave);
                             if (GUILayout.Button(EditorGUIUtility.IconContent("SaveAs@2x"), GUILayout.Height(30), GUILayout.MaxWidth(30)))
                                 GetOrSaveAnimationData(false);
@@ -234,7 +237,7 @@ public class AnimatorManipulationWindow : EditorWindow
 
                             GUILayout.BeginHorizontal();
                             GUILayout.FlexibleSpace();
-                            GUILayout.Space(100 - extraPad);
+                            GUILayout.Space(200 - extraPad);
                             SetAnimationTime(Mathf.Clamp(EditorGUILayout.FloatField(elapsedTime, GUILayout.Width(60)), 0, animations[animationIndex].length));
                             GUILayout.Label("/  " + animations[animationIndex].length);
                             GUILayout.Space(20);
@@ -243,6 +246,10 @@ public class AnimatorManipulationWindow : EditorWindow
 
                             GUILayout.BeginHorizontal();
                             GUILayout.FlexibleSpace();
+                            GUILayout.Label("Delay");
+                            delay = EditorGUILayout.FloatField(delay, GUILayout.Width(50));
+                            delay = Mathf.Max(delay, 0);
+                            GUILayout.Space(10);
                             GUILayout.Label("Speed");
                             speed = EditorGUILayout.FloatField(speed, GUILayout.Width(50));
                             speed = Mathf.Max(speed, 0.1f);
@@ -416,22 +423,40 @@ public class AnimatorManipulationWindow : EditorWindow
         playing = false;
     }
 
+    float delayTimer = 0;
+    bool delayActive = false;
     private void UpdateAnimationClip()
     {
+        
         if (animations.Count > 0)
         {
-            elapsedTime += (float)(EditorApplication.timeSinceStartup - t0) * speed;
-            if (looping) elapsedTime %= animations[animationIndex].length;
-            else if (elapsedTime > animations[animationIndex].length)
+            if ((looping && !delayActive) || !looping)
             {
-                StopAnimation();
-                elapsedTime = 0;
+                elapsedTime += (float)(EditorApplication.timeSinceStartup - t0) * speed;
+                //if (looping) elapsedTime %= animations[animationIndex].length;
+                if (elapsedTime > animations[animationIndex].length)
+                {
+                    if (!looping) StopAnimation();
+                    else delayActive = true;
+                    elapsedTime = 0;
+                    
+                }
+                t0 = EditorApplication.timeSinceStartup;
+
+                Sample();
+
+                Repaint();
             }
-            t0 = EditorApplication.timeSinceStartup;
-
-            Sample();
-
-            Repaint();
+            else
+            {
+                delayTimer += (float)(EditorApplication.timeSinceStartup - t0);
+                if (delayTimer > delay)
+                {
+                    delayTimer = 0;
+                    delayActive = false;
+                }
+                t0 = EditorApplication.timeSinceStartup;
+            }
         }
     }
 

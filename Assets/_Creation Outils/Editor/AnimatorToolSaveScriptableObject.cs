@@ -14,7 +14,7 @@ public class AnimatorToolSaveScriptableObject : ScriptableObject
         settings = new Settings();
     }
 
-    public void SaveToolData(float speed, bool looping) => toolData.Save(speed, looping);
+    public void SaveToolData(float speed, bool looping, float delay) => toolData.Save(speed, looping, delay);
 
     public ToolData Get() => toolData;
 
@@ -23,11 +23,13 @@ public class AnimatorToolSaveScriptableObject : ScriptableObject
     {
         public float speed = 1;
         public bool looping = true;
+        public float delay = 0;
 
-        public void Save(float speed, bool looping)
+        public void Save(float speed, bool looping, float delay)
         {
             this.speed = speed;
             this.looping = looping;
+            this.delay = delay;
         }
     }
 
