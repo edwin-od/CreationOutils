@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0349b26ba38092d4bb13ee8b961a48ab, type: 3}
+  m_Name: AnimatorToolSave
+  m_EditorClassIdentifier: 
+  toolData:
+    speed: 5
+    looping: 1
+  settings:
+    timelineBackgroundColor: {r: 0.65, g: 0.65, b: 0.65, a: 1}
+    hierarchySelectedColorPause: {r: 0, g: 0.4811321, b: 0.09050994, a: 1}
+    hierarchySelectedTextColorPause: {r: 0, g: 0, b: 0, a: 1}
+    hierarchySelectedColorPlay: {r: 0.4811321, g: 0, b: 0, a: 1}
+    hierarchySelectedTextColorPlay: {r: 0, g: 0, b: 0, a: 1}
+    buttonPauseColor: {r: 0, g: 1, b: 0, a: 1}
+    buttonPlayColor: {r: 1, g: 0, b: 0, a: 1}
