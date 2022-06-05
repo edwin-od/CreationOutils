@@ -123,6 +123,7 @@ public class AnimatorManipulationWindow : EditorWindow
                 {
                     speed = data.speed;
                     looping = data.looping;
+                    delay = data.delay;
                     lastSave = (speed, looping, delay);
                 }
                 else
@@ -246,13 +247,13 @@ public class AnimatorManipulationWindow : EditorWindow
 
                             GUILayout.BeginHorizontal();
                             GUILayout.FlexibleSpace();
-                            GUILayout.Label("Delay");
-                            delay = EditorGUILayout.FloatField(delay, GUILayout.Width(50));
-                            delay = Mathf.Max(delay, 0);
-                            GUILayout.Space(10);
                             GUILayout.Label("Speed");
                             speed = EditorGUILayout.FloatField(speed, GUILayout.Width(50));
                             speed = Mathf.Max(speed, 0.1f);
+                            GUILayout.Space(10);
+                            GUILayout.Label("Delay");
+                            delay = EditorGUILayout.FloatField(delay, GUILayout.Width(50));
+                            delay = Mathf.Max(delay, 0);
                             GUILayout.Space(10);
                             looping = GUILayout.Toggle(looping, "Loop");
                             GUILayout.Space(20);
